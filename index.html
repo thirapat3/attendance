@@ -16,38 +16,54 @@
       
         <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
        <script>
-            async function main() {
-                await liff.init({ liffId: "2007979320-mLxrQM9P" })
-                const profile = await liff.getProfile()
-                var userId = profile.userId
-                var pictureUrl = profile.pictureUrl
-                  
-            const text = document.getElementById('gps-text');
-            const userId_text = document.getElementById('userId');
+async function main() {
 
-            userId_text.textContent = userId;   
+    await liff.init({ liffId: "2007979320-mLxrQM9P" });
 
-              
-             navigator.geolocation.watchPosition(
-                  (pos) => {
-                    gpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                    dot.className  = 'gps-dot active';
-                    text.textContent = `GPS ✓ (${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)})`;
-                   
-                  },
-                  () => {
-                    dot.className  = 'gps-dot error';
-                    text.textContent = 'ไม่สามารถดึง GPS ได้ — กรุณาเปิดการระบุตำแหน่ง';
-                  },
-                  { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
+    if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+    }
 
-              
-            }
-            main()
+    const profile = await liff.getProfile();
+    const userId = profile.userId;
 
-           
-        </script>  
+    const text = document.getElementById('gps-text');
+    const userId_text = document.getElementById('userId');
+    const dot = document.getElementById('gps-dot');
+
+    userId_text.textContent = "LINE ID: " + userId;
+
+    navigator.geolocation.watchPosition(
+        (pos) => {
+
+            const gpsCoords = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            };
+
+            dot.className = 'gps-dot active';
+            text.textContent = `GPS ✓ (${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)})`;
+
+            console.log("Lat:", gpsCoords.lat);
+            console.log("Lng:", gpsCoords.lng);
+
+        },
+        (err) => {
+            dot.className = 'gps-dot error';
+            text.textContent = 'ไม่สามารถดึง GPS ได้ — กรุณาเปิดการระบุตำแหน่ง';
+            console.error(err);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+main();
+</script>
         
        
     </body>
