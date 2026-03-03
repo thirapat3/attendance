@@ -19,68 +19,6 @@ button { padding:15px 25px; font-size:18px; margin:10px; }
 
 <div id="status"></div>
 
-<script>
-
-const LIFF_ID = "2001362093-0qY6xqp6";
-const API_URL = "http://jordeejing.ddns.net:8090/api/checkin"; // เปลี่ยนตามของคุณ
-
-async function init() {
-    await liff.init({ liffId: LIFF_ID });
-
-    if (!liff.isLoggedIn()) {
-        liff.login();
-    }
-}
-
-async function checkIn(type) {
-
-    document.getElementById("status").innerText = "กำลังดึงตำแหน่ง...";
-
-    try {
-
-        // ดึง GPS
-        navigator.geolocation.getCurrentPosition(async function(pos) {
-
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-
-            // ดึง ID Token (สำคัญ)
-            const idToken = liff.getIDToken();
-
-            const payload = {
-                idToken: idToken,
-                lat: lat,
-                lng: lng,
-                type: type,
-                timestamp: Date.now()
-            };
-
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await response.text();
-
-            document.getElementById("status").innerText = result;
-
-        }, function(err){
-            alert("กรุณาเปิด GPS");
-        }, {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-        });
-
-    } catch (e) {
-        alert("เกิดข้อผิดพลาด");
-    }
-}
-
-init();
-
-</script>
 
 </body>
 </html>
