@@ -10,7 +10,7 @@
      <!-- GPS Status -->
       <div class="gps-row">
         <div class="gps-dot" id="gps-dot"></div>
-         <span id="userId">กำลังตรวจสอบ รหัส...</span>
+         <span id="user_Id">กำลังตรวจสอบ รหัส...</span>
         <span id="gps-text">กำลังตรวจสอบ GPS...</span>
       </div>
       
@@ -29,7 +29,7 @@ async function main() {
     const userId = profile.userId;
 
     const text = document.getElementById('gps-text');
-    const userId_text = document.getElementById('userId');
+    const userId_text = document.getElementById('user_Id');
     const dot = document.getElementById('gps-dot');
 
     userId_text.textContent = "LINE ID: " + userId;
